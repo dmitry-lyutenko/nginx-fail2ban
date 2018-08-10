@@ -1,0 +1,33 @@
+---
+ - name: copy nginx.repo
+   copy: src=nginx.repo dest=/etc/yum.repos.d/nginx.repo
+ - name: install nginx
+   yum: name={{ item }} state=latest 
+   with_items:
+    - nginx
+# - name: copy nginx.conf
+#   copy: src=nginx.conf dest=/etc/nginx/nginx.conf
+# - name: copy ngx_http_testcookie_access_module.so
+#   copy: src=ngx_http_testcookie_access_module.so dest=/usr/lib64/nginx/modules/ngx_http_testcookie_access_module.so
+# - name: copy nginx executable
+#   copy: src=nginx dest=/usr/sbin/nginx
+ - name: disable se
+   shell: setenforce 0
+ - name: restart nginx
+   service: name=nginx state=restarted enabled=yes
+ - name: Install Firewalld
+   yum: name=firewalld state=present
+ - name: Firewalld service state
+   service: name=firewalld state=started enabled=yes
+ - name: firewalld open http
+   firewalld:
+    service: http
+    permanent: true
+    immediate: true
+    state: enabled
+ - name: firewalld open http
+   firewalld:
+    service: https
+    permanent: true
+    immediate: true
+    state: enabled

@@ -1,0 +1,13 @@
+---
+  - name: install fail2ban
+    yum: name={{ item }} state=latest
+    with_items:
+     - epel-release
+     - https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+     - fail2ban
+  - name: copy fail2ban filter
+    copy: src=scrapertrap.conf dest=/etc/fail2ban/filter.d/scrapertrap.conf
+  - name: copy fail2ban jail
+    copy: src=00-scrapertrap.conf dest=/etc/fail2ban/jail.d/00-scrapertrap.conf
+  - name: restart fail2ban
+    service: name=fail2ban state=restarted enabled=yes
